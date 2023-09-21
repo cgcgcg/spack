@@ -14,10 +14,12 @@ class PyPynucleus(PythonPackage):
 
     maintainers("cgcgcg")
 
-    refs = ["master", "develop"]
+    version("master", branch="master")
 
-    for ref in refs:
-        version(ref, branch=ref)
+    variant("examples", default=True, description="Install examples")
+
+    # disabled by default because it requires a lot of heavy dependencies
+    variant("latex", default=False, description="Enable plots with latex labels")
 
     depends_on("python@3.10:", type=("build", "run"))
     depends_on("py-mpi4py@2.0.0:", type=("build", "link", "run"))
@@ -30,14 +32,13 @@ class PyPynucleus(PythonPackage):
     depends_on("py-h5py", type=("build", "run"))
     depends_on("py-tabulate", type=("build", "run"))
     depends_on("py-pyyaml", type=("build", "run"))
-    depends_on("py-matplotlib+latex", type=("build", "run"))
+    depends_on("py-matplotlib+latex", when="+latex", type=("build", "run"))
+    depends_on("py-matplotlib", when="~latex", type=("build", "run"))
     depends_on("py-scikit-sparse", type=("build", "run"))
     depends_on("py-modepy", type=("build", "run"))
     depends_on("py-meshpy", type=("build", "run"))
     depends_on("py-pytools", type=("build", "run"))
     depends_on("py-psutil", type="run")
-
-    variant("examples", default=True, description="Install examples")
 
     import_modules = [
         "PyNucleus",
